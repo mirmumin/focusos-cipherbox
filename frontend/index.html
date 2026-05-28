@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#0a0a0a">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="description" content="Personal AI Productivity OS">
+  <title>FocusOS</title>
+  <link rel="manifest" href="/manifest.json">
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <div id="auth-screen" class="screen">
+    <div class="auth-box">
+      <div class="logo">FOCUS<span class="accent">OS</span></div>
+      <div class="logo-sub">personal productivity system</div>
+      <div class="tabs">
+        <button class="tab active" onclick="showTab('login')">LOGIN</button>
+        <button class="tab" onclick="showTab('register')">REGISTER</button>
+      </div>
+      <div id="login-form">
+        <input type="text" id="login-user" placeholder="username" autocomplete="username">
+        <input type="password" id="login-pass" placeholder="password" autocomplete="current-password">
+        <button class="btn-primary" onclick="doLogin()">LOGIN →</button>
+      </div>
+      <div id="register-form" style="display:none">
+        <input type="text" id="reg-user" placeholder="username">
+        <input type="email" id="reg-email" placeholder="email (optional)">
+        <input type="password" id="reg-pass" placeholder="password (min 6 chars)">
+        <button class="btn-primary" onclick="doRegister()">CREATE ACCOUNT →</button>
+      </div>
+      <div id="auth-error" class="error-msg"></div>
+    </div>
+  </div>
+
+  <div id="app" style="display:none">
+    <nav id="sidebar">
+      <div class="brand">FOCUS<span class="accent">OS</span></div>
+      <div id="nav-user" class="nav-user"></div>
+      <ul class="nav-links">
+        <li><a href="#" onclick="showView('dashboard')" data-view="dashboard">⬛ Dashboard</a></li>
+        <li><a href="#" onclick="showView('planner')" data-view="planner">🗓 AI Planner</a></li>
+        <li><a href="#" onclick="showView('tasks')" data-view="tasks">✓ Tasks</a></li>
+        <li><a href="#" onclick="showView('goals')" data-view="goals">🎯 Goals & Projects</a></li>
+        <li><a href="#" onclick="showView('timer')" data-view="timer">⏱ Focus Timer</a></li>
+        <li><a href="#" onclick="showView('notes')" data-view="notes">📝 Notes</a></li>
+        <li><a href="#" onclick="showView('reflect')" data-view="reflect">🌙 Reflect</a></li>
+        <li><a href="#" onclick="showView('energy')" data-view="energy">⚡ Energy</a></li>
+        <li><a href="#" onclick="showView('calendar')" data-view="calendar">📅 Calendar</a></li>
+        <li><a href="#" onclick="showView('analytics')" data-view="analytics">📊 Analytics</a></li>
+        <li><a href="#" onclick="showView('settings')" data-view="settings">⚙ Settings</a></li>
+      </ul>
+      <button class="btn-logout" onclick="doLogout()">LOGOUT</button>
+    </nav>
+
+    <button id="menu-toggle" onclick="toggleSidebar()">☰</button>
+
+    <main id="main-content">
+      <div id="view-dashboard" class="view"></div>
+      <div id="view-planner" class="view" style="display:none"></div>
+      <div id="view-tasks" class="view" style="display:none"></div>
+      <div id="view-goals" class="view" style="display:none"></div>
+      <div id="view-timer" class="view" style="display:none"></div>
+      <div id="view-notes" class="view" style="display:none"></div>
+      <div id="view-reflect" class="view" style="display:none"></div>
+      <div id="view-energy" class="view" style="display:none"></div>
+      <div id="view-calendar" class="view" style="display:none"></div>
+      <div id="view-analytics" class="view" style="display:none"></div>
+      <div id="view-settings" class="view" style="display:none"></div>
+    </main>
+  </div>
+
+  <div id="modal-overlay" onclick="closeModal()" style="display:none"></div>
+  <div id="modal" style="display:none"></div>
+
+  <div id="toast" class="toast"></div>
+
+  <!-- Phase 3: smart reminders banner -->
+  <div id="smart-reminders" class="smart-reminders"></div>
+
+  <script src="/app.js"></script>
+  <script src="/phase2.js"></script>
+  <script src="/phase3.js"></script>
+</body>
+</html>
