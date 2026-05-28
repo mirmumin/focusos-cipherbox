@@ -12,7 +12,7 @@ function getClient() {
 }
 
 async function callGemini(prompt, maxTokens = 1024) {
-  const model = getClient().getGenerativeModel({ model: 'gemini-1.5-flash' });
+  const model = getClient().getGenerativeModel({ model: 'gemini-3.5-flash' });
   const result = await model.generateContent(prompt);
   return result.response.text();
 }

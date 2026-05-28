@@ -70,6 +70,7 @@ db.exec(`
     priority INTEGER DEFAULT 2,
     difficulty INTEGER DEFAULT 2,
     status TEXT DEFAULT 'pending',
+    done BOOLEAN DEFAULT 0,
     is_recurring INTEGER DEFAULT 0,
     recur_interval TEXT,
     due_date INTEGER,

@@ -37,7 +37,7 @@ function updateMemoryFromAnalytics(userId) {
   const overdue = db.prepare(`
     SELECT c.name, COUNT(*) as n FROM tasks t
     JOIN categories c ON t.category_id = c.id
-    WHERE t.user_id=? AND t.status='pending' AND t.due_date < unixepoch()
+    WHERE t.user_id=? AND t.status=\'pending\' AND t.due_date < unixepoch()
     GROUP BY c.id ORDER BY n DESC LIMIT 1
   `).get(userId);
   if (overdue) setMemory(userId, 'most_procrastinated_category', overdue.name);
@@ -46,13 +46,13 @@ function updateMemoryFromAnalytics(userId) {
   const hardFail = db.prepare(`
     SELECT COALESCE(c.name,'Uncategorized') as name, COUNT(*) as n FROM tasks t
     LEFT JOIN categories c ON t.category_id = c.id
-    WHERE t.user_id=? AND t.difficulty >= 4 AND t.status='pending' AND t.due_date < unixepoch()
+    WHERE t.user_id=? AND t.difficulty >= 4 AND t.status=\'pending\' AND t.due_date < unixepoch()
     GROUP BY t.category_id ORDER BY n DESC LIMIT 1
   `).get(userId);
   if (hardFail) setMemory(userId, 'hard_fail_category', hardFail.name);
 
   const hardFailCount = db.prepare(`
-    SELECT COUNT(*) as n FROM tasks WHERE user_id=? AND difficulty>=4 AND status='pending' AND due_date < unixepoch()
+    SELECT COUNT(*) as n FROM tasks WHERE user_id=? AND difficulty>=4 AND status=\'pending\' AND due_date < unixepoch()
   `).get(userId).n;
   setMemory(userId, 'hard_task_overdue_count', hardFailCount);
 
@@ -105,11 +105,11 @@ function updateMemoryFromAnalytics(userId) {
   setMemory(userId, 'active_days_this_week', streak);
 
   // ── Task difficulty distribution
-  const avgDiff = db.prepare('SELECT AVG(difficulty) as d FROM tasks WHERE user_id=? AND status="pending"').get(userId);
+  const avgDiff = db.prepare('SELECT AVG(difficulty) as d FROM tasks WHERE user_id=? AND status=\'pending\'').get(userId);
   if (avgDiff?.d) setMemory(userId, 'avg_pending_difficulty', avgDiff.d.toFixed(1));
 
   // ── Overload signal: pending tasks count
-  const pendingCount = db.prepare('SELECT COUNT(*) as n FROM tasks WHERE user_id=? AND status="pending"').get(userId).n;
+  const pendingCount = db.prepare('SELECT COUNT(*) as n FROM tasks WHERE user_id=? AND status=\'pending\'').get(userId).n;
   setMemory(userId, 'pending_task_count', pendingCount);
 
   // ── Longest focus session (personal best)
@@ -181,7 +181,7 @@ function getAdaptiveSuggestions(userId) {
   const hardFailingTasks = db.prepare(`
     SELECT t.id, t.title, t.difficulty, t.estimated_minutes, COALESCE(c.name,'') as category
     FROM tasks t LEFT JOIN categories c ON t.category_id = c.id
-    WHERE t.user_id=? AND t.difficulty >= 4 AND t.status='pending'
+    WHERE t.user_id=? AND t.difficulty >= 4 AND t.status=\'pending\'
     AND t.due_date < unixepoch() AND t.due_date IS NOT NULL
     ORDER BY t.created_at ASC LIMIT 5
   `).all(userId);
@@ -247,7 +247,7 @@ function getSmartReminders(userId) {
   if (procrastCat) {
     const overdueInCat = db.prepare(`
       SELECT COUNT(*) as n FROM tasks t JOIN categories c ON t.category_id=c.id
-      WHERE t.user_id=? AND c.name=? AND t.status='pending' AND t.due_date < unixepoch()
+      WHERE t.user_id=? AND c.name=? AND t.status=\'pending\' AND t.due_date < unixepoch()
     `).get(userId, procrastCat).n;
     if (overdueInCat >= 2) {
       reminders.push({ type: 'procrastination', priority: 'medium', msg: `📌 ${overdueInCat} overdue tasks in "${procrastCat}" — tackle one small piece today.` });
